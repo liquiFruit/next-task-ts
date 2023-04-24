@@ -7,7 +7,7 @@ export default {
       colors: {
         "muted-dark": "#102A29",
         "muted-light": "#103937",
-        "primary": "#00804B",
+        "primary": "#47FFB3",
         "secondary": "#ADD198",
         "white": "#EAFAFA"
       }

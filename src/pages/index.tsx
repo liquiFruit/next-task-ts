@@ -24,42 +24,53 @@ export default Home;
 const Navbar: React.FC = () => {
   return (
     <div className="flex flex-row items-center">
-      <p className="mr-auto text-2xl font-black">NextTask</p>
+      <p className="mr-auto text-2xl font-black cursor-crosshair">
+        <span className="text-primary">Next</span>Task
+        </p>
 
-      <div className="rounded-full bg-muted-dark px-4 py-1 shadow-[8px_4px_10px_rgba(0,0,0,0.25)]">
+      <div className="
+        cursor-pointer
+        rounded-full px-4 py-1 
+        bg-muted-dark 
+        shadow-[4px_6px_10px_rgba(0,0,0,0.25)] hover:scale-[120%] hover:shadow-[8px_10px_10px_rgba(0,0,0,0.25)]
+        transition-all duration-300 
+      ">
         Login
       </div>
     </div>
   );
 };
 
+
+interface Task {
+  title: string
+  desc: string
+  uid: string
+}
+
 const TaskList: React.FC = () => {
+  const tasks: Task[] = [
+    {
+      uid: "30Z",
+      title: "Ahf Dka",
+      desc: "Forem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis."
+    },
+    {
+      uid: "8E4",
+      title: "Brnho Tscuri",
+      desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus dolorem saepe optio perspiciatis excepturi sint."
+    },
+  ]
   return (
     <div className="mt-6 flex flex-col gap-4">
-      <Task
-        uid="30Z"
-        title="Ahf Dka"
-        desc="
-          Forem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.
-        "
-      />
-
-      <Task
-        uid="8E4"
-        title="Brnho Tscuri"
-        desc="
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus dolorem saepe optio perspiciatis excepturi sint.
-        "
-      />
+      { tasks.map(task => (
+        <Task uid={task.uid} title={task.title} desc={task.desc} />
+      ))}
     </div>
   );
 };
 
-const Task: React.FC<{ title: string; desc: string; uid: string }> = ({
-  title,
-  desc,
-  uid,
-}) => {
+const Task: React.FC<Task> = (task) => {
   return (
     <div
       className="
@@ -71,18 +82,18 @@ const Task: React.FC<{ title: string; desc: string; uid: string }> = ({
         cursor-pointer hover:scale-105 transition-all 
       "
     >
-      <div className="grid aspect-square h-full -rotate-90 place-items-center">
-        <p className=" text-2xl font-extrabold">{uid}</p>
+      <div className="grid aspect-square h-full -rotate-90 place-items-center self-start mt-1">
+        <p className=" text-2xl font-extrabold">{task.uid}</p>
       </div>
 
       <div>
-        <p className="text-sm font-semibold">{title}</p>
+        <p className="text-sm font-semibold">{task.title}</p>
         <p className="text-justify text-xs font-light leading-[14px] tracking-tighter">
-          {desc}
+          {task.desc}
         </p>
       </div>
 
-      <p className="mx-4 font-extrabold text-[#47FFB3] hover:scale-125 transition-all">Fiznh</p>
+      <p className="mx-4 font-extrabold text-primary hover:scale-125 transition-all duration-300">Fiznh</p>
     </div>
   );
 };
