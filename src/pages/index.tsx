@@ -1,5 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
   return (
@@ -49,22 +50,12 @@ interface Task {
 }
 
 const TaskList: React.FC = () => {
-  const tasks: Task[] = [
-    {
-      uid: "30Z",
-      title: "Ahf Dka",
-      desc: "Forem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis."
-    },
-    {
-      uid: "8E4",
-      title: "Brnho Tscuri",
-      desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus dolorem saepe optio perspiciatis excepturi sint."
-    },
-  ]
+  const { data: tasks } = api.task.getAll.useQuery()
+
   return (
     <div className="mt-6 flex flex-col gap-4">
-      { tasks.map(task => (
-        <Task uid={task.uid} title={task.title} desc={task.desc} />
+      { tasks && tasks.map(task => (
+        <Task uid={task.uid.slice(-3).toUpperCase()} title={task.title} desc={task.desc} />
       ))}
     </div>
   );
@@ -74,7 +65,7 @@ const Task: React.FC<Task> = (task) => {
   return (
     <div
       className="
-        flex flex-row items-center 
+        flex flex-row items-start 
         py-4 rounded-xl
         bg-gradient-to-tr from-[#09332E] to-[#2B564B]
         shadow-lg
@@ -86,14 +77,14 @@ const Task: React.FC<Task> = (task) => {
         <p className=" text-2xl font-extrabold">{task.uid}</p>
       </div>
 
-      <div>
+      <div className="w-full">
         <p className="text-sm font-semibold">{task.title}</p>
         <p className="text-justify text-xs font-light leading-[14px] tracking-tighter">
           {task.desc}
         </p>
       </div>
 
-      <p className="mx-4 font-extrabold text-primary hover:scale-125 transition-all duration-300">Fiznh</p>
+      <p className="self-center mx-4 font-extrabold text-primary hover:scale-125 transition-all duration-300">Fiznh</p>
     </div>
   );
 };
