@@ -1,21 +1,19 @@
 import { type NextPage } from "next";
-import Head from "next/head";
 import { useState } from "react";
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
   return (
     <>
-      <Head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-          rel="stylesheet"
-        />
-      </Head>
-
       <div className="h-[667px] w-[375px] bg-gradient-to-r from-muted-dark to-muted-light p-6 relative">
         <Navbar />
-        <TaskList />
+
+        <p className="mt-6 mb-2">Up Next</p>
+        <TaskList completed={false} />
+
+        <p className="mt-6 mb-2">Completed</p>
+        <TaskList completed={true} />
+        
         <TaskCreateForm />
       </div>
     </>
@@ -44,45 +42,33 @@ const Navbar: React.FC = () => {
   );
 };
 
-const ReactiveButton: React.FC = () => {
-  const [isActive, setIsActive] = useState(false);
-
-  const toggleActive = () => {
-    setIsActive(!isActive);
-  };
-
-  const bgColor = isActive ? 'bg-blue-500' : 'bg-gray-300';
-  const textColor = isActive ? 'text-white' : 'text-black';
-
-  return (
-    <button
-      className={`px-4 py-2 rounded ${bgColor} ${textColor}`}
-      onClick={toggleActive}
-    >
-      {isActive ? 'Active' : 'Inactive'}
-    </button>
-  );
-};
-
 interface Task {
   title: string
   desc: string
   uid: string
+  complete: boolean
 }
 
-const TaskList: React.FC = () => {
-  const { data: tasks } = api.task.getAll.useQuery()
+const TaskList: React.FC<{completed: boolean}> = (props) => {
+  const { data: tasks } = api.task.get.useQuery({completed: props.completed})
 
   return (
-    <div className="mt-6 flex flex-col gap-4">
+    <div className="flex flex-col gap-4">
       { tasks && tasks.map(task => (
-        <Task uid={task.uid.slice(-3).toUpperCase()} title={task.title} desc={task.desc} key={task.uid} />
+        <Task uid={task.uid} title={task.title} desc={task.desc} complete={task.complete} key={task.uid} />
       ))}
     </div>
   );
 };
 
 const Task: React.FC<Task> = (task) => {
+  const { refetch: refetchIncompletedTasks } = api.task.get.useQuery({completed: false})
+  const { refetch: refetchCompletedTasks } = api.task.get.useQuery({completed: true})
+  const markCompleted = api.task.update.useMutation({ onSuccess: () => {
+    refetchCompletedTasks()
+    refetchIncompletedTasks()
+  }})
+
   return (
     <div
       className="
@@ -95,7 +81,7 @@ const Task: React.FC<Task> = (task) => {
       "
     >
       <div className="grid aspect-square h-full -rotate-90 place-items-center self-start mt-1">
-        <p className=" text-2xl font-extrabold">{task.uid}</p>
+        <p className=" text-2xl font-extrabold">{task.uid.slice(-3).toUpperCase()}</p>
       </div>
 
       <div className="w-full">
@@ -105,12 +91,17 @@ const Task: React.FC<Task> = (task) => {
         </p>
       </div>
 
-      <p className="self-center mx-4 font-extrabold text-primary hover:scale-125 transition-all duration-300">Finish</p>
+      <p 
+        className={`self-center mx-4 font-extrabold hover:scale-125 transition-all duration-300 ${task.complete == false ? "text-primary" : "text-muted-dark"}`}
+        onClick={() => markCompleted.mutate({uid: task.uid, completed: !task.complete})}
+      >
+        { task.complete ? "Redo" : "Finish"}
+      </p>
     </div>
   );
 };
 
-import { useRef } from "react";
+import { useRef } from "react"; 
 const TaskCreateForm : React.FC = () => {
   const [isTitleFocused, setIsTitleFocused] = useState(false)
   const [title, setTitle] = useState("")
@@ -120,9 +111,11 @@ const TaskCreateForm : React.FC = () => {
   const [desc, setDesc] = useState("")
   const descRef = useRef<HTMLTextAreaElement | null>(null)
 
-  const { refetch: refetchTasks } = api.task.getAll.useQuery()
+  const { refetch: refetchIncompletedTasks } = api.task.get.useQuery({completed: false})
+  const { refetch: refetchCompletedTasks } = api.task.get.useQuery({completed: true})
   const createTask = api.task.create.useMutation({ onSuccess: () => {
-    refetchTasks()
+    refetchCompletedTasks()
+    refetchIncompletedTasks()
     setTitle("")
     titleRef.current && (titleRef.current.value = "")
     setDesc("")
@@ -135,7 +128,7 @@ const TaskCreateForm : React.FC = () => {
   }
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 ">
+    <div className="fixed bottom-4 left-4 right-4 backdrop-blur-lg">
       <div className="flex flex-row gap-4 items-center mb-4">
         <div 
           className="grow ring ring-white/50 rounded-xl py-1 px-3 relative cursor-pointer"

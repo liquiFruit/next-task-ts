@@ -21,9 +21,10 @@ model Example {
 }
 
 model Task {
-    uid   String @id @default(cuid())
-    title String
-    desc  String
+    uid      String  @id @default(cuid())
+    title    String
+    desc     String
+    complete Boolean @default(false)
 }
 
 // Necessary for Next auth
