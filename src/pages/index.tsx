@@ -2,19 +2,24 @@ import { type NextPage } from "next";
 import { useState } from "react";
 import { api } from "~/utils/api";
 
+import { useSession, signIn, signOut } from "next-auth/react"
+
 const Home: NextPage = () => {
+  const authStatus = useSession().status
   return (
     <>
       <div className="h-[667px] w-[375px] bg-gradient-to-r from-muted-dark to-muted-light p-6 relative">
         <Navbar />
 
-        <p className="mt-6 mb-2">Up Next</p>
-        <TaskList completed={false} />
+        {authStatus === "authenticated" && <>
+          <p className="mt-6 mb-2">Up Next</p>
+          <TaskList completed={false} />
 
-        <p className="mt-6 mb-2">Completed</p>
-        <TaskList completed={true} />
-        
-        <TaskCreateForm />
+          <p className="mt-6 mb-2">Completed</p>
+          <TaskList completed={true} />
+          
+          <TaskCreateForm />
+        </>}
       </div>
     </>
   );
@@ -23,20 +28,23 @@ const Home: NextPage = () => {
 export default Home;
 
 const Navbar: React.FC = () => {
+  const authStatus = useSession().status
   return (
     <div className="flex flex-row items-center">
       <p className="mr-auto text-2xl font-black cursor-crosshair">
         <span className="text-primary">Next</span>Task
         </p>
 
-      <div className="
-        cursor-pointer
-        rounded-full px-4 py-1 
-        bg-muted-dark 
-        shadow-[4px_6px_10px_rgba(0,0,0,0.25)] hover:scale-[120%] hover:shadow-[8px_10px_10px_rgba(0,0,0,0.25)]
-        transition-all duration-300 
+      <div
+        onClick={() => authStatus === "authenticated" ? signOut() : signIn()} 
+        className="
+          cursor-pointer
+          rounded-full px-4 py-1 
+          bg-muted-dark 
+          shadow-[4px_6px_10px_rgba(0,0,0,0.25)] hover:scale-[120%] hover:shadow-[8px_10px_10px_rgba(0,0,0,0.25)]
+          transition-all duration-300 
       ">
-        Login
+        {authStatus === "authenticated" ? 'Logout' : 'Login'}
       </div>
     </div>
   );
