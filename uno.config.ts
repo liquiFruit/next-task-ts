@@ -24,8 +24,10 @@ export default defineConfig({
     ],
     theme: {
         colors: {
-            "muted-dark": "#102A29",
-            "muted-light": "#103937",
+            "success": "rgb(52, 211, 153)",
+            "warning": "#FFC567",
+            "danger": "#FF8984",
+
             "primary": "#99DABB",
             "secondary": "#ADD198",
             "white": "#EAFAFA",
@@ -35,7 +37,7 @@ export default defineConfig({
                 3: "#1C1F26",
             },
             light: {
-                1: "white",
+                1: "#EAFAFA",
                 2: "#AFB0B6"
             }
         },

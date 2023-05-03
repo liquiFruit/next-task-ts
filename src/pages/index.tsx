@@ -13,15 +13,14 @@ const Home: NextPage = () => {
       <div className="bg-dark-1 min-h-screen p-6">
         <Navbar />
 
-        {/* <div className="grid grid-flow-dense grid-cols-3 gap-2 grid-rows-2 w-full aspect-[1/0.66]">
+        <div className="grid grid-flow-dense grid-cols-3 gap-2 grid-rows-2 w-full aspect-[1/0.66]">
           <Card className="col-span-2"/>          
           <Card className="row-span-2"/>          
           <Card />          
           <Card />          
-        </div> */}
+        </div>
 
-        <Task complete={false} desc="Create a portfolio" title="asd" uid="asd" />
-        <Task complete={false} desc="Create a portfolio" title="asd" uid="asd" />
+        <Task task={{title: "Create a design portfolio", complete: false, desc: "", uid: ""}} />
       </div>
     </>
   );
@@ -95,7 +94,7 @@ const Task: React.FC<{task: Task}> = (props) => {
         </p>
 
         <div className="mt-6 flex flex-row justify-between">
-          <div className="ring-warning/50 text-warning flex w-fit flex-row items-center gap-2 rounded-full px-4 py-2 ring">
+          <div className="ring-warning/50 hover:bg-warning/10 text-warning flex w-fit flex-row items-center gap-2 rounded-full px-4 py-2 ring">
             <div className="i-solar-backspace-line-duotone -scale-x-100" />
             <p className="text-warning/70 text-sm">Untrack</p>
           </div>
