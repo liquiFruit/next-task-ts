@@ -13,19 +13,20 @@ const Home: NextPage = () => {
       <div className="bg-dark-1 min-h-screen p-6">
         <Navbar />
 
-        <div className="grid grid-flow-dense grid-cols-3 gap-2 grid-rows-3 w-full aspect-square">
+        {/* <div className="grid grid-flow-dense grid-cols-3 gap-2 grid-rows-2 w-full aspect-[1/0.66]">
           <Card className="col-span-2"/>          
           <Card className="row-span-2"/>          
           <Card />          
           <Card />          
-        </div>
+        </div> */}
 
         <div className="bg-dark-2 rounded">
           <div className="rounded flex flex-row p-6 bg-dark-3">
-            <p className="font-medium">Create Design Portfolio</p>
+            <p className="font-medium font-serif">Create Design Portfolio</p>
           </div>
 
-          <div className="p-6 pt-3">
+          <div className="i-solar-hourglass-line-line-duotone text-amber text-10px">
+            
           </div>
         </div>
       </div>
