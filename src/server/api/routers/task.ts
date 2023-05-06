@@ -4,9 +4,8 @@ import { createTRPCRouter, publicProcedure } from "../trpc"
 
 export const taskRouter = createTRPCRouter({
     get: publicProcedure
-        .input(z.object({completed: z.boolean()}))
-        .query(({ctx, input}) => {
-        return ctx.prisma.task.findMany({where: {complete: input.completed}})
+        .query(({ctx}) => {
+        return ctx.prisma.task.findMany()
     }),
 
     create: publicProcedure
