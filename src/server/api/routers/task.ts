@@ -3,6 +3,8 @@ import { z } from "zod"
 import { createTRPCRouter, protectedProcedure } from "../trpc"
 import { TRPCError } from "@trpc/server"
 
+import dayjs from "dayjs"
+
 export const taskRouter = createTRPCRouter({
     get: protectedProcedure
         .query(({ ctx }) => {
@@ -28,13 +30,18 @@ export const taskRouter = createTRPCRouter({
 
     update: protectedProcedure
         .input(z.object({ id: z.string(), completed: z.boolean() }))
-        .mutation(({ ctx, input }) => {
+        .mutation(async ({ ctx, input }) => {
+            const task = await ctx.prisma.task.findFirst({where: {id: input.id, userId: ctx.session.user.id}})
+            
+            if (!task ) throw new TRPCError({code: "NOT_FOUND", message: "You do not have access to that task"})
+            
             return ctx.prisma.task.update({
                 where: {
-                    id: input.id
+                    id: input.id,
                 },
                 data: {
-                    complete: input.completed
+                    complete: input.completed,
+                    completedAt: input.completed ? dayjs().toDate() : null
                 }
             })
         }),

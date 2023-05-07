@@ -164,10 +164,17 @@ const Task: React.FC<{ task: Task; operations: TaskOperations }> = ({
       {isOpen && (
         <div className="p-6 pt-3">
           <div className="flex flex-row flex-wrap gap-x-6 gap-y-1">
-            <div className="children:text-light-2/40 flex flex-row items-center gap-3 text-sm">
-              <div className="i-solar-alarm-line-duotone scale-125" />
-              <p>{`${dayjs(task.createdAt).fromNow()}`}</p>
-            </div>
+            {task.completedAt ? (
+              <div className="children:text-light-2/40 flex flex-row items-center gap-3 text-sm">
+                <div className="i-solar-check-square-line-duotone scale-125" />
+                <p>{`${dayjs(task.completedAt).fromNow()}`}</p>
+              </div>
+            ) : (
+              <div className="children:text-light-2/40 flex flex-row items-center gap-3 text-sm">
+                <div className="i-solar-alarm-line-duotone scale-125" />
+                <p>{`${dayjs(task.createdAt).fromNow()}`}</p>
+              </div>
+            )}
             <div className="children:text-light-2/40 flex flex-row items-center gap-3 text-sm">
               <div className="i-solar-pie-chart-line-duotone scale-125" />
               <p>{`Personal`}</p>
