@@ -3,10 +3,13 @@ import type { Task } from "@prisma/client";
 
 import Navbar from "~/components/layout/Navbar";
 import useTaskStore from "~/stores/tasks";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { api } from "~/utils/api";
+import { useSession } from "next-auth/react";
 
 const Home: NextPage = () => {
+  const sesh = useSession()
+
   const tasks = useTaskStore((state) => state.tasks);
   const setTasks = useTaskStore((state) => state.setTasks);
   const { data } = api.task.get.useQuery();
@@ -18,8 +21,12 @@ const Home: NextPage = () => {
       <div className="bg-dark-1 min-h-screen p-6">
         <Navbar />
 
-        <CreateTaskForm />
-        <TaskGroup tasks={tasks} />
+        {sesh.status === "authenticated" && (
+          <>
+            <CreateTaskForm />
+            <TaskGroup tasks={tasks} />
+          </>
+        )}
       </div>
     </>
   );
@@ -28,9 +35,15 @@ export default Home;
 
 const CreateTaskForm: React.FC = () => {
   const [title, setTitle] = useState("");
+  const addButton = useRef<HTMLDivElement>(null)
   const { mutate, isLoading } = api.task.create.useMutation();
   const { refetch } = api.task.get.useQuery();
+
   const createTask = async () => {
+    if (title.length === 0) {
+      addButton.current?.classList.add("animate-shake-x")
+      return
+    }
     mutate(
       { title },
       {
@@ -47,17 +60,18 @@ const CreateTaskForm: React.FC = () => {
         <input
           className={`${
             isLoading ? "animate-pulse" : ""
-          } font-italic focus:font-not-italic focus:text-light bg-transparent font-serif font-medium outline-none`}
+          } font-italic focus:font-not-italic focus:text-light bg-transparent w-full font-serif font-medium outline-none`}
           placeholder="Next task"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          onKeyUp={(e) => {if (e.key === "Enter") createTask()}}
         />
         <div
           onAnimationEnd={(e) => e.currentTarget.classList.remove("animate-shake-x")}
+          ref={addButton}
           onClick={(e) => {
             e.stopPropagation();
-            if (title.length > 0) createTask()
-            else e.currentTarget.classList.add("animate-shake-x")
+            createTask()
           }}
           className={`${
             isLoading ? "animate-ping" : ""
