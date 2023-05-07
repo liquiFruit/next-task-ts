@@ -7,6 +7,10 @@ import { useRef, useState } from "react";
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
+
 const Home: NextPage = () => {
   const sesh = useSession();
 
@@ -159,14 +163,26 @@ const Task: React.FC<{ task: Task; operations: TaskOperations }> = ({
 
       {isOpen && (
         <div className="p-6 pt-3">
+          <div className="flex flex-row flex-wrap gap-x-6 gap-y-1">
+            <div className="children:text-light-2/40 flex flex-row items-center gap-3 text-sm">
+              <div className="i-solar-alarm-line-duotone scale-125" />
+              <p>{`${dayjs(task.createdAt).fromNow()}`}</p>
+            </div>
+            <div className="children:text-light-2/40 flex flex-row items-center gap-3 text-sm">
+              <div className="i-solar-pie-chart-line-duotone scale-125" />
+              <p>{`Personal`}</p>
+            </div>
+          </div>
           <div className="children:cursor-pointer mt-6 flex flex-row justify-center gap-6 text-3xl">
             <div className="text-warning i-solar-backspace-line-duotone -scale-x-100" />
             <div
               onClick={(e) => {
                 deleteTask(task.id);
               }}
-              className="text-danger i-solar-notification-lines-remove-line-duotone"
-            />
+              className="text-danger ring-danger/100 rounded-full px-6 py-1.5 text-sm ring"
+            >
+              Delete
+            </div>
           </div>
         </div>
       )}

@@ -21,6 +21,7 @@
     "@trpc/server": "^10.18.0",
     "@unocss/cli": "^0.51.8",
     "@unocss/reset": "^0.51.8",
+    "dayjs": "^1.11.7",
     "immer": "^10.0.1",
     "next": "^13.2.4",
     "next-auth": "^4.21.0",

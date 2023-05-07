@@ -21,11 +21,13 @@ model Example {
 }
 
 model Task {
-    id       String  @id @default(cuid())
-    title    String
-    complete Boolean @default(false)
-    User     User    @relation(fields: [userId], references: [id])
-    userId   String
+    id          String    @id @default(cuid())
+    title       String
+    complete    Boolean   @default(false)
+    User        User      @relation(fields: [userId], references: [id])
+    userId      String
+    createdAt   DateTime  @default(now())
+    completedAt DateTime?
 }
 
 // Necessary for Next auth
