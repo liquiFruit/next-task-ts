@@ -8,13 +8,13 @@ import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 
 const Home: NextPage = () => {
-  const sesh = useSession()
+  const sesh = useSession();
 
   const tasks = useTaskStore((state) => state.tasks);
   const setTasks = useTaskStore((state) => state.setTasks);
   const { data } = api.task.get.useQuery();
 
-  setTasks(data ?? [])
+  setTasks(data ?? []);
 
   return (
     <>
@@ -35,24 +35,28 @@ export default Home;
 
 const CreateTaskForm: React.FC = () => {
   const [title, setTitle] = useState("");
-  const addButton = useRef<HTMLDivElement>(null)
-  const { mutate, isLoading } = api.task.create.useMutation();
+  const addButton = useRef<HTMLDivElement>(null);
+  const { mutate, isLoading, status } = api.task.create.useMutation();
   const { refetch } = api.task.get.useQuery();
 
   const createTask = async () => {
-    if (title.length === 0) {
-      addButton.current?.classList.add("animate-shake-x")
-      return
-    }
-    mutate(
-      { title },
-      {
-        onSuccess() {
-          refetch();
-          setTitle("");
-        },
-      }
-    );
+    if (status === "loading") return;
+    else if (title.length === 0) {
+      addButton.current?.classList.add("animate-shake-x");
+      return;
+    } else
+      mutate(
+        { title },
+        {
+          onSuccess() {
+            refetch();
+            setTitle("");
+          },
+          onError() {
+            alert("error");
+          },
+        }
+      );
   };
   return (
     <>
@@ -60,18 +64,22 @@ const CreateTaskForm: React.FC = () => {
         <input
           className={`${
             isLoading ? "animate-pulse" : ""
-          } font-italic focus:font-not-italic focus:text-light bg-transparent w-full font-serif font-medium outline-none`}
+          } font-italic focus:font-not-italic focus:text-light w-full bg-transparent font-serif font-medium outline-none`}
           placeholder="Next task"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          onKeyUp={(e) => {if (e.key === "Enter") createTask()}}
+          onKeyUp={(e) => {
+            if (e.key === "Enter") createTask();
+          }}
         />
         <div
-          onAnimationEnd={(e) => e.currentTarget.classList.remove("animate-shake-x")}
+          onAnimationEnd={(e) =>
+            e.currentTarget.classList.remove("animate-shake-x")
+          }
           ref={addButton}
           onClick={(e) => {
             e.stopPropagation();
-            createTask()
+            createTask();
           }}
           className={`${
             isLoading ? "animate-ping" : ""
@@ -82,30 +90,35 @@ const CreateTaskForm: React.FC = () => {
   );
 };
 
-
-type TaskOperations = { 
-  updateTask: (id: string, completed: boolean) => void,
-  deleteTask: (id: string) => void
-}
+type TaskOperations = {
+  updateTask: (id: string, completed: boolean) => void;
+  deleteTask: (id: string) => void;
+};
 
 const TaskGroup: React.FC<{ tasks: Task[] }> = ({ tasks }) => {
-  const {mutate: updateMutation} = api.task.update.useMutation()
-  const {mutate: deleteMutation} = api.task.delete.useMutation()
+  const { mutate: updateMutation } = api.task.update.useMutation();
+  const { mutate: deleteMutation } = api.task.delete.useMutation();
 
-  const { refetch } = api.task.get.useQuery()
+  const { refetch } = api.task.get.useQuery();
   const operations: TaskOperations = {
     updateTask: async (id: string, completed: boolean) => {
-      await updateMutation({id, completed}, {
-        onSuccess: () => refetch()
-      })
+      await updateMutation(
+        { id, completed },
+        {
+          onSuccess: () => refetch(),
+        }
+      );
     },
 
     deleteTask: async (id: string) => {
-      await deleteMutation({id}, {
-        onSuccess: () => refetch()
-      })
-    }
-  }
+      await deleteMutation(
+        { id },
+        {
+          onSuccess: () => refetch(),
+        }
+      );
+    },
+  };
 
   return (
     <>
@@ -118,7 +131,10 @@ const TaskGroup: React.FC<{ tasks: Task[] }> = ({ tasks }) => {
   );
 };
 
-const Task: React.FC<{ task: Task, operations: TaskOperations }> = ({ task, operations: {updateTask, deleteTask} }) => {
+const Task: React.FC<{ task: Task; operations: TaskOperations }> = ({
+  task,
+  operations: { updateTask, deleteTask },
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -131,11 +147,12 @@ const Task: React.FC<{ task: Task, operations: TaskOperations }> = ({ task, oper
         <div
           onClick={(e) => {
             e.stopPropagation();
-            e.currentTarget.classList.add("animate-ping")
-            updateTask(task.id, !task.complete)
+            e.currentTarget.classList.add("animate-ping");
+            updateTask(task.id, !task.complete);
           }}
           className={` i-solar-check-square-line-duotone text-3xl ${
-            task.complete && "text-success animate-ping animate-count-1 animate-reverse"
+            task.complete &&
+            "text-success animate-count-1 animate-reverse animate-ping"
           }`}
         />
       </div>
@@ -146,7 +163,7 @@ const Task: React.FC<{ task: Task, operations: TaskOperations }> = ({ task, oper
             <div className="text-warning i-solar-backspace-line-duotone -scale-x-100" />
             <div
               onClick={(e) => {
-                deleteTask(task.id)
+                deleteTask(task.id);
               }}
               className="text-danger i-solar-notification-lines-remove-line-duotone"
             />

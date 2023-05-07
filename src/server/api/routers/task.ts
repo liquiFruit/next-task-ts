@@ -1,25 +1,32 @@
 import { z } from "zod"
 
-import { createTRPCRouter, publicProcedure } from "../trpc"
+import { createTRPCRouter, protectedProcedure } from "../trpc"
+import { TRPCError } from "@trpc/server"
 
 export const taskRouter = createTRPCRouter({
-    get: publicProcedure
+    get: protectedProcedure
         .query(({ ctx }) => {
-            return ctx.prisma.task.findMany({orderBy: [{complete: "asc"}]})
+            return ctx.prisma.task.findMany({
+                where: {
+                    userId: ctx.session.user.id
+                },
+                orderBy: [{ complete: "asc" }]
+            })
         }),
 
-    create: publicProcedure
+    create: protectedProcedure
         .input(z.object({ title: z.string() }))
         .mutation(async ({ ctx, input }) => {
             await new Promise(p => setTimeout(p, 2000))
             return ctx.prisma.task.create({
                 data: {
-                    title: input.title
+                    title: input.title,
+                    userId: ctx.session.user.id
                 }
             })
         }),
 
-    update: publicProcedure
+    update: protectedProcedure
         .input(z.object({ id: z.string(), completed: z.boolean() }))
         .mutation(({ ctx, input }) => {
             return ctx.prisma.task.update({
@@ -32,9 +39,22 @@ export const taskRouter = createTRPCRouter({
             })
         }),
 
-    delete: publicProcedure
+    delete: protectedProcedure
         .input(z.object({ id: z.string() }))
-        .mutation(({ ctx, input }) => {
-            return ctx.prisma.task.delete({ where: { id: input.id } })
+        .mutation(async ({ ctx, input }) => {
+            const task = await ctx.prisma.task.findFirst({
+                where: {
+                    id: input.id,
+                    userId: ctx.session.user.id
+                }
+            })
+
+            if (task === undefined) throw new TRPCError({code: "UNAUTHORIZED", message: "You dont have access to that task."})
+            
+            return ctx.prisma.task.delete({
+                where: {
+                    id: input.id,
+                }
+            })
         })
 })
