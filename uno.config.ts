@@ -28,7 +28,7 @@ export default defineConfig({
             "warning": "#FFC567",
             "danger": "#FF8984",
 
-            "primary": "#99DABB",
+            "primary": "#60C597",
             "secondary": "#ADD198",
             "white": "#EAFAFA",
             dark: {
