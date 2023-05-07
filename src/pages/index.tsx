@@ -43,7 +43,7 @@ const CreateTaskForm: React.FC = () => {
   const { mutate, isLoading, status } = api.task.create.useMutation();
   const { refetch } = api.task.get.useQuery();
 
-  const createTask = async () => {
+  const createTask = () => {
     if (status === "loading") return;
     else if (title.length === 0) {
       addButton.current?.classList.add("animate-shake-x");
@@ -53,7 +53,7 @@ const CreateTaskForm: React.FC = () => {
         { title },
         {
           onSuccess() {
-            refetch();
+            void refetch();
             setTitle("");
           },
           onError() {
@@ -73,7 +73,7 @@ const CreateTaskForm: React.FC = () => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           onKeyUp={(e) => {
-            if (e.key === "Enter") createTask();
+            if (e.key === "Enter") void createTask();
           }}
         />
         <div
@@ -83,7 +83,7 @@ const CreateTaskForm: React.FC = () => {
           ref={addButton}
           onClick={(e) => {
             e.stopPropagation();
-            createTask();
+            void createTask();
           }}
           className={`${
             isLoading ? "animate-ping" : ""
@@ -105,20 +105,20 @@ const TaskGroup: React.FC<{ tasks: Task[] }> = ({ tasks }) => {
 
   const { refetch } = api.task.get.useQuery();
   const operations: TaskOperations = {
-    updateTask: async (id: string, completed: boolean) => {
-      await updateMutation(
+    updateTask: (id: string, completed: boolean) => {
+      updateMutation(
         { id, completed },
         {
-          onSuccess: () => refetch(),
+          onSuccess: () => void refetch(),
         }
       );
     },
 
-    deleteTask: async (id: string) => {
-      await deleteMutation(
+    deleteTask: (id: string) => {
+      deleteMutation(
         { id },
         {
-          onSuccess: () => refetch(),
+          onSuccess: () => void refetch(),
         }
       );
     },
@@ -155,8 +155,8 @@ const Task: React.FC<{ task: Task; operations: TaskOperations }> = ({
             updateTask(task.id, !task.complete);
           }}
           className={` i-solar-check-square-line-duotone text-3xl ${
-            task.complete &&
-            "text-success animate-count-1 animate-reverse animate-ping"
+            task.complete ?
+            "text-success animate-count-1 animate-reverse animate-ping" : ""
           }`}
         />
       </div>

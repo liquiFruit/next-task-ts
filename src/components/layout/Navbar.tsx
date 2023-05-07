@@ -1,17 +1,19 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 
 const Navbar: React.FC = () => {
-  const sesh = useSession()
+  const sesh = useSession();
 
   return (
-    <div className="flex flex-row justify-between items-center">
+    <div className="flex flex-row items-center justify-between">
       <div className="text-light-1 text-2xl font-bold">
         <span className="text-primary">Next</span>Task
       </div>
 
-      <div 
-        onClick={() => sesh.status === "unauthenticated" ? signIn() : signOut()} className="cursor-pointer bg-light-1 hover:bg-light-2 rounded text-dark text-sm py-1 px-4">
-        { sesh.status === "unauthenticated" ? "Sign In" : "Sign Out"}
+      <div
+        onClick={() => {sesh.status === "unauthenticated" ? void signIn() : void signOut()}}
+        className="bg-light-1 hover:bg-light-2 text-dark cursor-pointer rounded px-4 py-1 text-sm"
+      >
+        {sesh.status === "unauthenticated" ? "Sign In" : "Sign Out"}
       </div>
     </div>
   );
