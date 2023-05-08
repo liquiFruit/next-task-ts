@@ -29,7 +29,11 @@ export const taskRouter = createTRPCRouter({
         }),
 
     update: protectedProcedure
-        .input(z.object({ id: z.string(), completed: z.boolean() }))
+        .input(z.object({ 
+            id: z.string(), 
+            complete: z.boolean().optional(),
+            archived: z.boolean().optional() 
+        }))
         .mutation(async ({ ctx, input }) => {
             const task = await ctx.prisma.task.findFirst({where: {id: input.id, userId: ctx.session.user.id}})
             
@@ -40,8 +44,9 @@ export const taskRouter = createTRPCRouter({
                     id: input.id,
                 },
                 data: {
-                    complete: input.completed,
-                    completedAt: input.completed ? dayjs().toDate() : null
+                    archived: input.archived ?? task.archived,
+                    complete: input.complete ?? task.complete,
+                    completedAt: task.completedAt ?? input.complete ? dayjs().toDate() : null
                 }
             })
         }),
