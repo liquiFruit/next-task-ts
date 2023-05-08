@@ -6,29 +6,30 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
-  url = env("DATABASE_URL")
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
 }
 
 model Example {
-    id        String   @id @map("_id") @default(cuid())
+    id        String   @id @default(cuid()) @map("_id")
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
 model Task {
-    id          String    @id @map("_id") @default(cuid())
+    id          String    @id @default(cuid()) @map("_id")
     title       String
     complete    Boolean   @default(false)
     User        User      @relation(fields: [userId], references: [id])
     userId      String
     createdAt   DateTime  @default(now())
     completedAt DateTime?
+    archived     Boolean   @default(false)
 }
 
 // Necessary for Next auth
 model Account {
-    id                String  @id @map("_id") @default(cuid())
+    id                String  @id @default(cuid()) @map("_id")
     userId            String
     type              String
     provider          String
@@ -46,7 +47,7 @@ model Account {
 }
 
 model Session {
-    id           String   @id @map("_id") @default(cuid())
+    id           String   @id @default(cuid()) @map("_id")
     sessionToken String   @unique
     userId       String
     expires      DateTime
@@ -54,7 +55,7 @@ model Session {
 }
 
 model User {
-    id            String    @id @map("_id") @default(cuid())
+    id            String    @id @default(cuid()) @map("_id")
     name          String?
     email         String?   @unique
     emailVerified DateTime?

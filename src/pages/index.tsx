@@ -142,7 +142,7 @@ const CreateTaskForm: React.FC = () => {
 };
 
 type TaskOperations = {
-  updateTask: (id: string, completed: boolean) => void;
+  updateTask: (id: string, task: Partial<Task>) => void;
   deleteTask: (id: string) => void;
 };
 
@@ -152,9 +152,9 @@ const TaskGroup: React.FC<{ tasks: Task[] }> = ({ tasks }) => {
 
   const { refetch } = api.task.get.useQuery();
   const operations: TaskOperations = {
-    updateTask: (id: string, completed: boolean) => {
+    updateTask: (id: string, task: Partial<Task>) => {
       updateMutation(
-        { id, completed },
+        { id, ...task },
         {
           onSuccess: () => void refetch(),
         }
@@ -199,12 +199,18 @@ const Task: React.FC<{ task: Task; operations: TaskOperations }> = ({
           onClick={(e) => {
             e.stopPropagation();
             e.currentTarget.classList.add("animate-ping");
-            updateTask(task.id, !task.complete);
+            updateTask(task.id, {...task, complete: !task.complete});
           }}
-          className={` i-solar-check-square-line-duotone text-3xl ${
+          className={` 
+          text-3xl 
+          ${!task.archived 
+            ? "i-solar-check-square-line-duotone"
+            : "i-solar-archive-check-line-duotone"
+          }
+          ${
             task.complete
               ? "text-success animate-count-1 animate-reverse animate-ping"
-              : ""
+              : (task.archived && !task.complete) ? "text-warning i-solar-archive-line-duotone" : ""
           }`}
         />
       </div>
@@ -231,7 +237,7 @@ const Task: React.FC<{ task: Task; operations: TaskOperations }> = ({
           <div className="children:cursor-pointer mt-6 flex flex-row justify-center gap-6 text-3xl">
             <div
               onClick={(e) => {
-                deleteTask(task.id);
+                updateTask(task.id, {...task, archived: !task.archived});
               }}
               className="bg-warning/5 hover:bg-warning/50 transition hover:text-dark text-warning rounded-full px-6 py-1.5 text-sm"
             >
