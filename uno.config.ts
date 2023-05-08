@@ -42,5 +42,16 @@ export default defineConfig({
             }
         },
     },
-    shortcuts: [["rounded", "rounded-3xl"]]
+    shortcuts: [["rounded", "rounded-3xl"]],
+
+    rules: [
+        // [/^bg-radial-(\w+)/, ([, w], { rawSelector, currentSelector, theme, variants }) => {
+        //     if (!w) return ""
+
+        //     return `` +
+        //     `${/\bhover:/.test(rawSelector) ? '.hover\\:' : '.'}` +
+        //     `${currentSelector}${/\bhover:/.test(rawSelector) ? ':hover' : ''}` +
+        //     `{ background: radial-gradient(ellipse at center, rgba(0,0,0,0) 30%, ${theme.colors[w]}10);}`
+        // }]
+    ]
 })

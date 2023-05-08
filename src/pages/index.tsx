@@ -25,7 +25,7 @@ const Home: NextPage = () => {
   return (
     <>
       <div className="bg-dark-1 min-h-screen p-6">
-        <Navbar />
+        <div className="mb-6"><Navbar /></div>
 
         {sesh.status === "authenticated" && (
           <>
@@ -57,11 +57,11 @@ const Statistics: React.FC<{ tasks: Task[] }> = ({ tasks }) => {
   };
 
   return (
-    <div className="aspect-[1/0.66] grid grid-cols-3 gap-2">
+    <div className="grid aspect-[1/0.66] grid-cols-3 gap-2">
       <Card
         className="col-span-2"
         stat={`${Math.ceil(timeDoingTasks())} min`}
-        title="time in tasks"
+        title="in total"
       />
 
       <Card
@@ -77,7 +77,7 @@ const Statistics: React.FC<{ tasks: Task[] }> = ({ tasks }) => {
       <Card
         className="col-span-2"
         stat={`${Math.ceil(averageTimePerTask())} min`}
-        title="average time per task"
+        title="per task"
       />
     </div>
   );
@@ -229,12 +229,19 @@ const Task: React.FC<{ task: Task; operations: TaskOperations }> = ({
             </div>
           </div>
           <div className="children:cursor-pointer mt-6 flex flex-row justify-center gap-6 text-3xl">
-            <div className="text-warning i-solar-backspace-line-duotone -scale-x-100" />
             <div
               onClick={(e) => {
                 deleteTask(task.id);
               }}
-              className="text-danger ring-danger/100 rounded-full px-6 py-1.5 text-sm ring"
+              className="bg-warning/5 hover:bg-warning/50 transition hover:text-dark text-warning rounded-full px-6 py-1.5 text-sm"
+            >
+              Archive
+            </div>
+            <div
+              onClick={(e) => {
+                deleteTask(task.id);
+              }}
+              className="bg-danger/5 text-danger hover:bg-danger/50 transition hover:text-dark rounded-full px-6 py-1.5 text-sm"
             >
               Delete
             </div>
