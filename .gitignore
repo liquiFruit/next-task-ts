@@ -18,7 +18,7 @@
 next-env.d.ts
 
 # unocss build
-/src/styles/uno.css
+# /src/styles/uno.css
 
 # production
 /build
