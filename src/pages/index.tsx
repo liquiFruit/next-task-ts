@@ -2,6 +2,8 @@ import type { NextPage } from "next";
 import type { Task } from "@prisma/client";
 
 import Navbar from "~/components/layout/Navbar";
+import Card from "~/components/statistics/Card";
+
 import useTaskStore from "~/stores/tasks";
 import { useRef, useState } from "react";
 import { api } from "~/utils/api";
@@ -27,6 +29,7 @@ const Home: NextPage = () => {
 
         {sesh.status === "authenticated" && (
           <>
+            <Statistics tasks={tasks} />
             <CreateTaskForm />
             <TaskGroup tasks={tasks} />
           </>
@@ -36,6 +39,49 @@ const Home: NextPage = () => {
   );
 };
 export default Home;
+
+const Statistics: React.FC<{ tasks: Task[] }> = ({ tasks }) => {
+  const timeDoingTasks = (): number => {
+    var total = 0;
+    tasks.forEach((task, _i, _a) => {
+      if (!task.complete || !task.completedAt || !task.createdAt) return;
+
+      var duration = task.completedAt.getTime() - task.createdAt.getTime();
+      total += duration;
+    });
+    return total / (1000 * 60);
+  };
+
+  const averageTimePerTask = (): number => {
+    return timeDoingTasks() / tasks.filter((task) => task.complete).length;
+  };
+
+  return (
+    <div className="aspect-[1/0.66] grid grid-cols-3 gap-2">
+      <Card
+        className="col-span-2"
+        stat={`${Math.ceil(timeDoingTasks())} min`}
+        title="time in tasks"
+      />
+
+      <Card
+        stat={tasks.filter((task) => task.complete).length.toString()}
+        title="complete"
+      />
+
+      <Card
+        stat={tasks.filter((task) => !task.complete).length.toString()}
+        title="incomplete"
+      />
+
+      <Card
+        className="col-span-2"
+        stat={`${Math.ceil(averageTimePerTask())} min`}
+        title="average time per task"
+      />
+    </div>
+  );
+};
 
 const CreateTaskForm: React.FC = () => {
   const [title, setTitle] = useState("");
@@ -71,6 +117,7 @@ const CreateTaskForm: React.FC = () => {
           } font-italic focus:font-not-italic focus:text-light w-full bg-transparent font-serif font-medium outline-none`}
           placeholder="Next task"
           value={title}
+          disabled={isLoading}
           onChange={(e) => setTitle(e.target.value)}
           onKeyUp={(e) => {
             if (e.key === "Enter") void createTask();
@@ -155,8 +202,9 @@ const Task: React.FC<{ task: Task; operations: TaskOperations }> = ({
             updateTask(task.id, !task.complete);
           }}
           className={` i-solar-check-square-line-duotone text-3xl ${
-            task.complete ?
-            "text-success animate-count-1 animate-reverse animate-ping" : ""
+            task.complete
+              ? "text-success animate-count-1 animate-reverse animate-ping"
+              : ""
           }`}
         />
       </div>
