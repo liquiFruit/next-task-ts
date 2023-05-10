@@ -68,8 +68,8 @@ const CreateTaskForm: React.FC = () => {
               ${isLoading ? "animate-ping" : ""}
               ${
 					isOpen || title.length > 0
-						? "i-solar-close-square-line-duotone"
-						: "i-solar-add-square-line-duotone"
+						? "i-solar-add-square-line-duotone"
+						: "i-solar-pen-new-square-line-duotone"
 				}
               text-3xl
             `}
