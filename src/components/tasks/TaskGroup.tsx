@@ -28,6 +28,9 @@ const TaskGroup: React.FC<{ tasks: ITask[] }> = ({ tasks }) => {
     },
   };
 
+
+  tasks = tasks.filter((task, _i, _arr) => !task.archived)
+
   return (
     <>
       <div className="flex flex-col gap-3">
