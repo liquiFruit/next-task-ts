@@ -34,7 +34,9 @@ const Home: NextPage = () => {
           <>
             <StatsSummary tasks={tasks} />
             <CreateTaskForm />
-            <TaskGroup tasks={tasks} />
+        
+            <TaskGroup title="General tasks" tasks={tasks} />
+            <TaskGroup title="Personal Tasks" tasks={tasks} />
           </>
         )}
       </div>
