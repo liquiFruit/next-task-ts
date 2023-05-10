@@ -41,12 +41,12 @@ const CreateTaskForm: React.FC = () => {
 				{/* Header */}
 				<div className="bg-dark-3 mb-6 mt-3 flex flex-row items-center justify-between rounded rounded p-6">
 					{/* Title input */}
-					<div className="relative">
+					<div className="relative grow">
 						<input
 							className={`
                 ${isLoading ? "animate-pulse" : ""} 
                 font-italic focus:font-not-italic focus:text-light $ peer w-full bg-transparent font-serif font-medium
-                outline-none 
+                outline-none w-full
               `}
 							placeholder="New task"
 							value={title}

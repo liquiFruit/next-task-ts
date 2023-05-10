@@ -19,6 +19,7 @@ const Task: React.FC<TaskParameters> = ({
 
 	return (
 		<div className="bg-dark-2 rounded">
+			{/* Header */}
 			<div
 				className="bg-dark-3 flex flex-row items-center justify-between rounded p-6"
 				onClick={(_e) => setIsOpen(!isOpen)}
@@ -50,21 +51,26 @@ const Task: React.FC<TaskParameters> = ({
 				/>
 			</div>
 
+			{/* Body */}
 			{isOpen && (
 				<div className="p-6 pt-3">
 					{/* Quick info */}
 					<div className="flex flex-row flex-wrap gap-x-6 gap-y-1">
-						{task.completedAt ? (
+						{task.complete && task.completedAt ? (
+							// "Completed At"
 							<div className="children:text-light-2/40 flex flex-row items-center gap-3 text-sm">
 								<div className="i-solar-check-square-line-duotone scale-125" />
 								<p>{`${dayjs(task.completedAt).fromNow()}`}</p>
 							</div>
 						) : (
+							// "Created at"
 							<div className="children:text-light-2/40 flex flex-row items-center gap-3 text-sm">
 								<div className="i-solar-alarm-line-duotone scale-125" />
 								<p>{`${dayjs(task.createdAt).fromNow()}`}</p>
 							</div>
 						)}
+
+						{/* Category */}
 						<div className="children:text-light-2/40 flex flex-row items-center gap-3 text-sm">
 							<div className="i-solar-pie-chart-line-duotone scale-125" />
 							<p>{`Personal`}</p>
@@ -72,14 +78,11 @@ const Task: React.FC<TaskParameters> = ({
 					</div>
 
 					{/* Description */}
-					{task.description && 
-            <p className="text-light-2 my-3">
-              {task.description}
-            </p>
-          }
-					
-          
-          {/* Buttons */}
+					{task.description && (
+						<p className="text-light-2 my-3">{task.description}</p>
+					)}
+
+					{/* Buttons */}
 					<div className="children:cursor-pointer mt-6 flex flex-row justify-center gap-6 text-3xl">
 						<div
 							onClick={(_e) => {
