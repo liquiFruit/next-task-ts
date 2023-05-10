@@ -18,15 +18,14 @@ const CreateTaskForm: React.FC = () => {
 			return;
 		} else
 			mutate(
-				{ 
-					title, 
-					description: description === "" ? undefined : description 
+				{
+					title,
+					description: description === "" ? undefined : description,
 				},
 				{
 					onSuccess() {
 						void refetch();
-						setTitle("");
-						setDescription("")
+						resetForm();
 					},
 					onError() {
 						alert("error");
@@ -35,11 +34,20 @@ const CreateTaskForm: React.FC = () => {
 			);
 	};
 
+	const resetForm = () => {
+		setIsOpen(false);
+		setTitle("");
+		setDescription("");
+	};
+
 	return (
 		<>
-			<div className="bg-dark-2 rounded" onFocus={() => setIsOpen(true)}>
+			<div
+				className="bg-dark-2 rounded mb-6"
+				onFocus={() => setIsOpen(true)}
+			>
 				{/* Header */}
-				<div className="bg-dark-3 mb-6 mt-3 flex flex-row items-center justify-between rounded rounded p-6">
+				<div className="bg-dark-3 mt-3 flex flex-row items-center justify-between rounded rounded p-6">
 					{/* Title input */}
 					<div className="relative grow">
 						<input
@@ -86,7 +94,7 @@ const CreateTaskForm: React.FC = () => {
 
 				{/* Body */}
 				{isOpen && (
-					<div className="m-6 mt-0">
+					<div className="p-6">
 						{/* Description */}
 						<div className="relative">
 							<textarea
@@ -106,6 +114,14 @@ const CreateTaskForm: React.FC = () => {
 							<p className="font-light text-light-2 -translate-y-80% absolute left-0 top-0 text-xs peer-placeholder-shown:text-transparent transition-all">
 								Description
 							</p>
+						</div>
+
+						{/* Buttons */}
+						<div
+							onClick={resetForm}
+							className="button-danger mx-auto"
+						>
+							Cancel
 						</div>
 					</div>
 				)}

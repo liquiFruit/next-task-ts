@@ -83,7 +83,7 @@ const Task: React.FC<TaskParameters> = ({
 					)}
 
 					{/* Buttons */}
-					<div className="children:cursor-pointer mt-6 flex flex-row justify-center gap-6 text-3xl">
+					<div className="mt-6 flex flex-row justify-center gap-6">
 						<div
 							onClick={(_e) => {
 								updateTask(task.id, {
@@ -91,7 +91,7 @@ const Task: React.FC<TaskParameters> = ({
 									archived: !task.archived,
 								});
 							}}
-							className="bg-warning/5 hover:bg-warning/50 hover:text-dark text-warning rounded-full px-6 py-1.5 text-sm transition"
+							className="button-warning"
 						>
 							Archive
 						</div>
@@ -99,7 +99,7 @@ const Task: React.FC<TaskParameters> = ({
 							onClick={(_e) => {
 								deleteTask(task.id);
 							}}
-							className="bg-danger/5 text-danger hover:bg-danger/50 hover:text-dark rounded-full px-6 py-1.5 text-sm transition"
+							className="button-danger"
 						>
 							Delete
 						</div>
