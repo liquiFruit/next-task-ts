@@ -42,7 +42,11 @@ export default defineConfig({
             }
         },
     },
-    shortcuts: [["rounded", "rounded-3xl"]],
+    shortcuts: [["rounded", "rounded-3xl"],
+        [/^button-([a-z]+)$/, ([, color]) => {
+        return `bg-${color}/5 text-${color} hover:bg-${color}/50 hover:text-light rounded-full px-6 py-1.5 text-sm transition w-fit cursor-pointer`
+        }]
+    ],
 
     rules: [
         // [/^bg-radial-(\w+)/, ([, w], { rawSelector, currentSelector, theme, variants }) => {
