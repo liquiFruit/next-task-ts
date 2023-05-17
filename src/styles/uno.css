@@ -88,6 +88,7 @@
 .px-4{padding-left:1rem;padding-right:1rem;}
 .py-1{padding-top:0.25rem;padding-bottom:0.25rem;}
 .pt-3{padding-top:0.75rem;}
+.text-center{text-align:center;}
 .font-serif{font-family:"Satoshi",ui-serif,Georgia,Cambria,"Times New Roman",Times,serif;}
 .text-2xl{font-size:1.5rem;line-height:2rem;}
 .text-3xl{font-size:1.875rem;line-height:2.25rem;}

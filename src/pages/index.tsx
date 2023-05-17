@@ -24,19 +24,17 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <div className="bg-dark-1 min-h-screen children:max-w-2xl children:mx-auto p-6">
-        <div className="mb-6"><Navbar /></div>
-
         {sesh.status === "authenticated" && (
           <>
-            {data?.map((group) => (
-              <TaskGroup title={group.title} groupId={group.id} />
-            ))}
+            <h2 className="text-2xl">Groups</h2>
+            <p>list out groups with cards</p>
+            <p>include radial progress bar</p>
+            <p>click takes you to groupview page</p>
           </>
         )}
-      </div>
     </>
   );
 };
+
 export default Home;
 
