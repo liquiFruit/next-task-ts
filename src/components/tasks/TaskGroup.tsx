@@ -46,7 +46,7 @@ const TaskGroup: React.FC<TaskGroupProps> = ({ groupId, title }) => {
 			{/* Header */}
 			<div className="flex flex-row justify-between items-center">
 				<p className="text-xl mb-2 font-500">{title}</p>
-				<div onClick={handleShowTaskCreate} className="i-solar-pen-new-square-line-duotone text-2xl" />
+				<div onClick={handleShowTaskCreate} className="icon-pen text-2xl" />
 			</div>
 
 			{/* Body */}

@@ -33,13 +33,13 @@ const Summary: React.FC<{ tasks: ITask[] }> = ({ tasks }) => {
       <Card
         stat={tasks.filter((task) => task.complete).length.toString()}
         title="complete"
-        icon="i-solar-check-square-line-duotone text-success"
+        icon="icon-check text-success"
       />
 
       <Card
         stat={tasks.filter((task) => !task.complete).length.toString()}
         title="incomplete"
-        icon="i-solar-clipboard-remove-line-duotone text-warning"
+        icon="icon-clipboard-remove text-warning"
       />
 
       <Card

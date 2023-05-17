@@ -36,13 +36,13 @@ const Task: React.FC<TaskParameters> = ({
 					className={` 
             text-3xl 
             ${!task.archived
-							? "i-solar-check-square-line-duotone"
-							: "i-solar-archive-check-line-duotone"
+							? "icon-check"
+							: "icon-time"
 						}
             ${task.complete
 							? "text-success animate-count-1 animate-reverse animate-ping"
 							: task.archived && !task.complete
-								? "text-warning i-solar-archive-line-duotone"
+								? "text-warning icon-archive"
 								: ""
 						}`}
 				/>
@@ -56,20 +56,20 @@ const Task: React.FC<TaskParameters> = ({
 						{task.complete && task.completedAt ? (
 							// "Completed At"
 							<div className="children:text-light-2/40 flex flex-row items-center gap-3 text-sm">
-								<div className="i-solar-check-square-line-duotone scale-125" />
+								<div className="icon-check scale-125" />
 								<p>{`${dayjs(task.completedAt).fromNow()}`}</p>
 							</div>
 						) : (
 							// "Created at"
 							<div className="children:text-light-2/40 flex flex-row items-center gap-3 text-sm">
-								<div className="i-solar-alarm-line-duotone scale-125" />
+								<div className="icon-time scale-125" />
 								<p>{`${dayjs(task.createdAt).fromNow()}`}</p>
 							</div>
 						)}
 
 						{/* Category */}
 						<div className="children:text-light-2/40 flex flex-row items-center gap-3 text-sm">
-							<div className="i-solar-pie-chart-line-duotone scale-125" />
+							<div className="icon-pie-chart scale-125" />
 							<p>{`Personal`}</p>
 						</div>
 					</div>

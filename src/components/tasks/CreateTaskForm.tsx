@@ -89,8 +89,8 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({ groupId, onCreated, onC
 						className={`
               ${isLoading ? "animate-ping" : ""}
               ${isOpen || title.length > 0
-								? "i-solar-add-square-line-duotone"
-								: "i-solar-pen-new-square-line-duotone"
+								? "icon-add"
+								: "icon-pen"
 							}
               text-3xl
             `}
