@@ -61,7 +61,7 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({ groupId, onCreated, onC
 				onFocus={() => setIsOpen(true)}
 			>
 				{/* Header */}
-				<div className="bg-dark-3 mt-3 flex flex-row items-center justify-between rounded rounded p-6">
+				<div className="bg-dark-3 flex flex-row items-center justify-between rounded rounded p-6">
 					{/* Title input */}
 					<div className="relative grow">
 						<input
