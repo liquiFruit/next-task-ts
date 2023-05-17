@@ -1,48 +1,67 @@
+import { useState } from "react";
+
 import { api } from "~/utils/api";
-import { type Task as ITask } from "@prisma/client";
 
 import Task from "~/components/tasks/Task";
+import CreateTaskForm from "./CreateTaskForm";
+import type { TaskOperations } from "~/types/task";
 
-const TaskGroup: React.FC<{ title: string; tasks: ITask[] }> = ({
-	title,
-	tasks,
-}) => {
-	const { mutate: updateMutation } = api.task.update.useMutation();
-	const { mutate: deleteMutation } = api.task.delete.useMutation();
+type TaskGroupProps = {
+	groupId: string,
+	title: string
+}
+const TaskGroup: React.FC<TaskGroupProps> = ({ groupId, title }) => {
+	const [isCreateTask, setCreateTask] = useState(false)
 
-	const { refetch } = api.task.get.useQuery();
+	const { data: tasks, refetch: refetchTasks } = api.task.getTasks.useQuery({ groupId })
+	const { mutate: updateTaskMutate } = api.task.updateTask.useMutation()
+	const { mutate: deleteTaskMutate } = api.task.delete.useMutation()
+	
+	const handleShowTaskCreate = () => setCreateTask(!isCreateTask)
+
+
+
 	const operations: TaskOperations = {
-		updateTask: (id: string, task: Partial<ITask>) => {
-			updateMutation(
-				{ id, ...task },
-				{
-					onSuccess: () => void refetch(),
-				}
-			);
+		updateTask(task) {
+			updateTaskMutate(task, {
+				onError: (e) => alert(e.message)
+			})
 		},
-
-		deleteTask: (id: string) => {
-			deleteMutation(
-				{ id },
-				{
-					onSuccess: () => void refetch(),
+		deleteTask(id) {
+			deleteTaskMutate(id, {
+				onError(err) {
+					alert(err)
+				},
+				onSuccess() {
+					alert("successfully deleted")
 				}
-			);
-		},
-	};
+			})
 
-	tasks = tasks.filter((task, _i, _arr) => !task.archived);
+		},
+	}
+
 
 	return (
 		<>
-			<div className="flex flex-row justify-between items-center px-6">
+			{/* Header */}
+			<div className="flex flex-row justify-between items-center">
 				<p className="text-xl mb-2 font-500">{title}</p>
-        <div className="i-solar-pen-new-square-line-duotone text-2xl"/>
+				<div onClick={handleShowTaskCreate} className="i-solar-pen-new-square-line-duotone text-2xl" />
 			</div>
+
+			{/* Body */}
 			<div className="flex flex-col gap-3">
-				{tasks?.map((task, _i, _a) => (
-					<Task key={task.id} task={task} operations={operations} />
-				))}
+				{isCreateTask && (
+					<CreateTaskForm groupId={groupId} onCancel={handleShowTaskCreate} onCreated={handleShowTaskCreate} />
+				)}
+
+				{!tasks ? (
+					<p className="text-light-2">No tasks to show.</p>
+				) : (
+					tasks.map((task) => (
+						<Task key={task.id} task={task} operations={operations} />
+					))
+				)}
 			</div>
 		</>
 	);

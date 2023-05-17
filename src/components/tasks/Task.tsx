@@ -5,6 +5,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
 import { Task as TaskType } from "@prisma/client";
+import type { TaskOperations } from "~/types/task";
 
 type TaskParameters = {
 	task: TaskType;
@@ -29,25 +30,21 @@ const Task: React.FC<TaskParameters> = ({
 					onClick={(e) => {
 						e.stopPropagation();
 						e.currentTarget.classList.add("animate-ping");
-						updateTask(task.id, {
-							...task,
-							complete: !task.complete,
-						});
+						task.complete = !task.complete
+						updateTask({ id: task.id, complete: task.complete });
 					}}
 					className={` 
             text-3xl 
-            ${
-				!task.archived
-					? "i-solar-check-square-line-duotone"
-					: "i-solar-archive-check-line-duotone"
-			}
-            ${
-				task.complete
-					? "text-success animate-count-1 animate-reverse animate-ping"
-					: task.archived && !task.complete
-					? "text-warning i-solar-archive-line-duotone"
-					: ""
-			}`}
+            ${!task.archived
+							? "i-solar-check-square-line-duotone"
+							: "i-solar-archive-check-line-duotone"
+						}
+            ${task.complete
+							? "text-success animate-count-1 animate-reverse animate-ping"
+							: task.archived && !task.complete
+								? "text-warning i-solar-archive-line-duotone"
+								: ""
+						}`}
 				/>
 			</div>
 
@@ -86,10 +83,8 @@ const Task: React.FC<TaskParameters> = ({
 					<div className="mt-6 flex flex-row justify-center gap-6">
 						<div
 							onClick={(_e) => {
-								updateTask(task.id, {
-									...task,
-									archived: !task.archived,
-								});
+								task.archived = !task.archived
+								updateTask(task);
 							}}
 							className="button-warning"
 						>
@@ -97,7 +92,7 @@ const Task: React.FC<TaskParameters> = ({
 						</div>
 						<div
 							onClick={(_e) => {
-								deleteTask(task.id);
+								deleteTask({id: task.id});
 							}}
 							className="button-danger"
 						>

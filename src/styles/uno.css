@@ -86,7 +86,6 @@
 .hover\:bg-light-2:hover{--un-bg-opacity:1;background-color:rgba(175,176,182,var(--un-bg-opacity));}
 .p-6{padding:1.5rem;}
 .px-4{padding-left:1rem;padding-right:1rem;}
-.px-6{padding-left:1.5rem;padding-right:1.5rem;}
 .py-1{padding-top:0.25rem;padding-bottom:0.25rem;}
 .pt-3{padding-top:0.75rem;}
 .font-serif{font-family:"Satoshi",ui-serif,Georgia,Cambria,"Times New Roman",Times,serif;}

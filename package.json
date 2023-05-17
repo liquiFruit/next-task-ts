@@ -10,7 +10,9 @@
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start -p 3001",
-    "dev": "npm-run-all --parallel dev:*"
+    "dev": "npm-run-all --parallel dev:*",
+    "studio": "pnpx prisma studio",
+    "generate": "pnpm prisma generate"
   },
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.5",

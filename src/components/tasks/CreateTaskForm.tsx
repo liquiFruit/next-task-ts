@@ -2,14 +2,21 @@ import { useState, useRef } from "react";
 
 import { api } from "~/utils/api";
 
-const CreateTaskForm: React.FC = () => {
+type CreateTaskFormProps = {
+	groupId: string,
+
+	onCreated?: () => void,
+	onCancel?: () => void
+}
+const CreateTaskForm: React.FC<CreateTaskFormProps> = ({ groupId, onCreated, onCancel }) => {
 	const addButton = useRef<HTMLDivElement>(null);
 	const [isOpen, setIsOpen] = useState(false);
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
 
+	// CRUD api
 	const { mutate, isLoading, status } = api.task.create.useMutation();
-	const { refetch } = api.task.get.useQuery();
+	const { refetch } = api.task.getTasks.useQuery({ groupId });
 
 	const createTask = () => {
 		if (status === "loading") return;
@@ -19,6 +26,7 @@ const CreateTaskForm: React.FC = () => {
 		} else
 			mutate(
 				{
+					groupId,
 					title,
 					description: description === "" ? undefined : description,
 				},
@@ -26,6 +34,7 @@ const CreateTaskForm: React.FC = () => {
 					onSuccess() {
 						void refetch();
 						resetForm();
+						onCreated && onCreated()
 					},
 					onError() {
 						alert("error");
@@ -39,6 +48,11 @@ const CreateTaskForm: React.FC = () => {
 		setTitle("");
 		setDescription("");
 	};
+
+	const handleCancel = () => {
+		resetForm()
+		onCancel && onCancel()
+	}
 
 	return (
 		<>
@@ -74,11 +88,10 @@ const CreateTaskForm: React.FC = () => {
 					<div
 						className={`
               ${isLoading ? "animate-ping" : ""}
-              ${
-					isOpen || title.length > 0
-						? "i-solar-add-square-line-duotone"
-						: "i-solar-pen-new-square-line-duotone"
-				}
+              ${isOpen || title.length > 0
+								? "i-solar-add-square-line-duotone"
+								: "i-solar-pen-new-square-line-duotone"
+							}
               text-3xl
             `}
 						onAnimationEnd={(e) =>
@@ -99,10 +112,10 @@ const CreateTaskForm: React.FC = () => {
 						<div className="relative">
 							<textarea
 								className={`
-                ${isLoading ? "animate-pulse" : ""} 
-                font-italic focus:font-not-italic focus:text-light $ peer w-full bg-transparent font-serif font-medium
-                outline-none h-10ex resize-none
-              `}
+									${isLoading ? "animate-pulse" : ""} 
+									font-italic focus:font-not-italic focus:text-light $ peer w-full bg-transparent font-serif font-medium
+									outline-none h-10ex resize-none
+								`}
 								placeholder="Task description"
 								value={description}
 								onChange={(e) => setDescription(e.target.value)}
@@ -118,7 +131,7 @@ const CreateTaskForm: React.FC = () => {
 
 						{/* Buttons */}
 						<div
-							onClick={resetForm}
+							onClick={handleCancel}
 							className="button-danger mx-auto"
 						>
 							Cancel

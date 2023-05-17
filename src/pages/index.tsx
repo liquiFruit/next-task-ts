@@ -17,13 +17,10 @@ import { api } from "~/utils/api";
 
 
 const Home: NextPage = () => {
+
   const sesh = useSession();
 
-  const tasks = useTaskStore((state) => state.tasks);
-  const setTasks = useTaskStore((state) => state.setTasks);
-  const { data } = api.task.get.useQuery();
-
-  setTasks(data ?? []);
+  const { data } = api.task.getGroups.useQuery()
 
   return (
     <>
@@ -32,11 +29,9 @@ const Home: NextPage = () => {
 
         {sesh.status === "authenticated" && (
           <>
-            <StatsSummary tasks={tasks} />
-            <CreateTaskForm />
-        
-            <TaskGroup title="General tasks" tasks={tasks} />
-            <TaskGroup title="Personal Tasks" tasks={tasks} />
+            {data?.map((group) => (
+              <TaskGroup title={group.title} groupId={group.id} />
+            ))}
           </>
         )}
       </div>
