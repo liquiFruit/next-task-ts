@@ -62,7 +62,15 @@ export default defineConfig({
 
 
         [/^button-([a-z]+)$/, ([, color]) => {
-            return `hover:bg-${color}/5 text-${color} rounded-full px-6 py-1.5 text-sm w-fit cursor-pointer transition duration-350 hover:animate-pulse hover:animate-delay-1000`
+            return (
+                `
+                hover:bg-${color}/10
+                ring ring-${color}/10 hover:ring-${color}/25 \
+                rounded-full w-fit px-6 py-1.5 \
+                text-${color} text-sm cursor-pointer \
+                bounceTransition hover:scale-105 hover:animate-pulse hover:animate-delay-250 \
+                `
+            )
         }],
         [/^icon-([a-z]+)$/, ([, data]) => "iconBase " + iconMap.get(data!)]
     ],
