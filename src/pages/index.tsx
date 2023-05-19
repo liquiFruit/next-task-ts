@@ -8,12 +8,15 @@ dayjs.extend(relativeTime);
 import { api } from "~/utils/api";
 import DropdownCard from "~/components/UI/DropdownCard";
 import Link from "next/link";
+import useGroups from "~/hooks/useGroups";
+import { useEffect } from "react";
 
 const Home: NextPage = () => {
 	const sesh = useSession();
 
-	const { data } = api.task.getGroups.useQuery();
-
+	const { groups, fetchGroups } = useGroups();
+	fetchGroups()
+	
 	return (
 		<>
 			{sesh.status === "authenticated" && (
@@ -23,7 +26,7 @@ const Home: NextPage = () => {
 						<div className="icon-add text-2xl ml-auto" />
 					</div>
 					<div className="flex flex-col gap-2">
-						{data?.map((g) => (
+						{Array.from(groups).map(([id,g]) => (
 							<DropdownCard
 								header={
 									<div className="w-full flex flex-row justify-between items-center">
@@ -82,10 +85,11 @@ const Home: NextPage = () => {
 								}
 								body={
 									<div className="flex flex-row flex-wrap gap-4 children:grow children:text-center ">
-										<Link href={`/group/${g.id}`}>
-											<div className="button-primary">
-												View
-											</div>
+										<Link
+											href={`/group/${g.id}`}
+											className="button-primary"
+										>
+											View
 										</Link>
 										<div className="button-warning">
 											Archive
