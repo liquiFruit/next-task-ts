@@ -5,6 +5,7 @@ import type { TaskGroup } from "@prisma/client"
 type GroupStore = {
   groups: Map<string, TaskGroup>,
   setGroups: (new_groups: TaskGroup[]) => void,
+  setGroup: (group: TaskGroup) => void
 }
 
 const useGroupStore = create<GroupStore>((set) => ({
@@ -15,8 +16,14 @@ const useGroupStore = create<GroupStore>((set) => ({
     })
 
     return { groups: state.groups }
+  }),
+
+  setGroup: (group) => set(state => {
+    state.groups.set(group.id, group)
+    return { groups: state.groups }
   })
-}))
+}
+))
 
 
 export default useGroupStore

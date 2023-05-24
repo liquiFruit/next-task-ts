@@ -5,18 +5,19 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
-import { api } from "~/utils/api";
 import DropdownCard from "~/components/UI/DropdownCard";
 import Link from "next/link";
-import useGroups from "~/hooks/useGroups";
-import { useEffect } from "react";
+import { useGroups } from "~/hooks/groups";
 
 const Home: NextPage = () => {
 	const sesh = useSession();
-
 	const { groups, fetchGroups } = useGroups();
-	fetchGroups()
-	
+
+	{
+		fetchGroups();
+		console.log("fetching groups");
+	}
+
 	return (
 		<>
 			{sesh.status === "authenticated" && (
@@ -26,8 +27,9 @@ const Home: NextPage = () => {
 						<div className="icon-add text-2xl ml-auto" />
 					</div>
 					<div className="flex flex-col gap-2">
-						{Array.from(groups).map(([id,g]) => (
+						{Array.from(groups).map(([, g]) => (
 							<DropdownCard
+								key={g.id}
 								header={
 									<div className="w-full flex flex-row justify-between items-center">
 										<p className="text-xl tracking-widest font-200">
@@ -74,8 +76,8 @@ const Home: NextPage = () => {
 											<text
 												x="50"
 												y="50"
-												text-anchor="middle"
-												alignment-baseline="middle"
+												textAnchor="middle"
+												alignmentBaseline="middle"
 												className="text-2xl fill-light font-black"
 											>
 												98%
